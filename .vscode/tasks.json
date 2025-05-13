@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run MiniMUD Game",
+			"type": "shell",
+			"command": "mvn spring-boot:run",
+			"isBackground": true,
+			"problemMatcher": [
+				"$java"
+			]
+		}
+	]
+}

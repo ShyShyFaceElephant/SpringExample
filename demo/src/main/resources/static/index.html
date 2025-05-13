@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMUD Game</title>
+    <style>
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #game-state {
+            white-space: pre-line;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 100px;
+            background-color: #f5f5f5;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input {
+            flex-grow: 1;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .command-help {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .command-help h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .command-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .command-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .command-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>MiniMUD 遊戲</h1>
+    <div id="game-state">
+        👾 [ 遊戲開始！歡迎勇者！ ]
+    </div>
+    <div class="input-area">
+        <input type="text" id="command-input" placeholder="輸入指令...">
+        <button id="submit-button">送出</button>
+    </div>
+
+    <div class="command-help">
+        <h2>遊戲指令說明</h2>
+        <ul class="command-list">
+            <li><strong>look</strong> - 查看當前房間的描述、怪物、道具和可用出口</li>
+            <li><strong>move [方向]</strong> - 移動到指定方向的房間 (例如: move north)</li>
+            <li><strong>attack</strong> - 攻擊當前房間的怪物</li>
+            <li><strong>skill [技能名稱]</strong> - 使用指定技能攻擊 (例如: skill fireball)</li>
+            <li><strong>use potion</strong> - 使用治療藥水回復生命值</li>
+            <li><strong>exit</strong> - 離開遊戲</li>
+        </ul>
+    </div>
+
+    <script>
+        const apiUrl = window.location.origin + '/api/game/command';
+        
+        document.getElementById('submit-button').addEventListener('click', () => {
+            const command = document.getElementById('command-input').value;
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('game-state').innerText = data;
+                document.getElementById('command-input').value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('game-state').innerText = '錯誤：無法連接到遊戲伺服器';
+            });
+        });
+
+        // 支援按下 Enter 鍵送出指令
+        document.getElementById('command-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-button').click();
+            }
+        });
+    </script>
+</body>
+</html>

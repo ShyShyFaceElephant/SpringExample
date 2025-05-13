@@ -1,13 +1,12 @@
-// Web 版 GameContext.java
-package com.example.demo;
+package com.mycompany.app.miniMUD.model;
 
 public class GameContext {
     private Player player;
     private Room currentRoom;
 
-    public GameContext(Player player, Room startRoom) {
+    public GameContext(Player player, Room currentRoom) {
         this.player = player;
-        this.currentRoom = startRoom;
+        this.currentRoom = currentRoom;
     }
 
     public Player getPlayer() {
@@ -18,7 +17,7 @@ public class GameContext {
         return currentRoom;
     }
 
-    public void setCurrentRoom(Room room) {
-        this.currentRoom = room;
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
     }
 }
